@@ -1,14 +1,14 @@
-# Display a Intro Screen for the Vending Machine
+# Displaying a Intro Screen for the Vending Machine 
 def display_vending_machine_title():
-    print("+" + "-" * 32 + "+")
-    print("|      Snackstation Vending      |")
-    print("|          Machine Menu          |")
-    print("+" + "-" * 32 + "+")
-    print("         A   B   C   D")
-    print("       -----------------")
-    print("   1   Water   Chips   Soda   Chocolate")
-    print("   2   Juice   Cookies Energy Bar Muffins")
-    print("+" + "-" * 29 + "+\n") 
+    print("╔" + "═" * 46 + "╗")
+    print("║           ~*~ SNACK STATION ~*~              ║")
+    print("║         Your Favorite Snack Hub!             ║")
+    print("╠" + "═" * 46 + "╣")
+    print("║               A       B       C       D      ║")
+    print("║             ---------------------------      ║")
+    print("║     1      Water   Chips   Soda   Chocolate  ║")
+    print("║     2      Juice   Cookies Energy Bar Muffins║")
+    print("╚" + "═" * 46 + "╝\n")
 
 # Vending Machine Items
 items = {
