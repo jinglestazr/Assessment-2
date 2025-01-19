@@ -22,3 +22,16 @@ items = {
     "2D": {"name": "Muffins", "price": 2.25, "stock": 5},
 }
 
+# Displaying the menu in a readable format
+def display_menu(items):
+    print("\nAvailable Items:")
+    for code, item in items.items():
+        print(f"{code}: {item['name']} - {item['price']:.2f} dhs (Stock: {item['stock']})")
+
+# Making it User interactive for the uswer to select the item of choice 
+def get_item_code(items):
+    while True:
+        code = input("\nEnter the code of the item you want to purchase (e.g., 1A): ").upper()
+        if code in items:
+            return code
+        print("Invalid code. Please try again.")
