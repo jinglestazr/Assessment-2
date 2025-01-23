@@ -1,14 +1,82 @@
 # Displaying a Intro Screen for the Vending Machine 
+
 def display_vending_machine_title():
+    print(r"""
+███████╗███╗   ██╗ █████╗  ██████╗██╗  ██╗    ███╗   ███╗ █████╗  ██████╗██╗  ██╗██╗███╗   ██╗███████╗
+██╔════╝████╗  ██║██╔══██╗██╔════╝██║ ██╔╝    ████╗ ████║██╔══██╗██╔════╝██║  ██║██║████╗  ██║██╔════╝
+███████╗██╔██╗ ██║███████║██║     █████╔╝     ██╔████╔██║███████║██║     ███████║██║██╔██╗ ██║█████╗  
+╚════██║██║╚██╗██║██╔══██║██║     ██╔═██╗     ██║╚██╔╝██║██╔══██║██║     ██╔══██║██║██║╚██╗██║██╔══╝  
+███████║██║ ╚████║██║  ██║╚██████╗██║  ██╗    ██║ ╚═╝ ██║██║  ██║╚██████╗██║  ██║██║██║ ╚████║███████╗
+╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝    ╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚══════╝
+                                                                                                    
+    """)
     print("╔" + "═" * 46 + "╗")
-    print("║           ~*~ SNACK STATION ~*~              ║")
+    print(r"║           ~*~ ͓͓̽̽S͓͓̽̽N͓͓̽̽A͓͓̽̽C͓͓̽̽K͓̽ ͓̽N͓͓̽̽A͓͓̽̽T͓͓̽̽I͓͓̽̽O͓͓̽̽N͓̽ ~*~               ║")
     print("║         Your Favorite Snack Hub!             ║")
+    print("╠" + "═" * 46 + "╣\n")
+
+
+# Display the menu in a visually appealing format
+def display_menu(items):
+    print("\n╔" + "═" * 46 + "╗")
+    print("║                 Available Items              ║")
     print("╠" + "═" * 46 + "╣")
-    print("║               A       B       C       D      ║")
-    print("║             ---------------------------      ║")
-    print("║     1      Water   Chips   Soda   Chocolate  ║")
-    print("║     2      Juice   Cookies Energy Bar Muffins║")
-    print("╚" + "═" * 46 + "╝\n")
+    print("║ Code │       Item Name       │ Price │ Stock ║")
+    print("╠" + "═" * 46 + "╣")
+    for code, item in items.items():
+        print(f"║ {code:<4} │ {item['name']:<19} │ {item['price']:<5.2f} │ {item['stock']:<6}  ║")
+    print("╚" + "═" * 46 + "╝")
+
+
+# Get valid code from the user
+def get_item_code(items):
+    while True:
+        code = input("\nEnter the code of the item you want to purchase (e.g., 1A): ").upper()
+        if code in items:
+            return code
+        print("Invalid code. Please try again.")
+
+
+# Process payment
+def process_payment(item):
+    while True:
+        try:
+            amount = float(input(f"Insert money (Price: {item['price']:.2f} dhs): "))
+            if amount >= item["price"]:
+                return amount - item["price"]
+            else:
+                print(f"Not enough money. Please add {item['price'] - amount:.2f} dhs more.")
+        except ValueError:
+            print("Invalid input. Please insert a valid amount.")
+
+
+# Dispense item
+def dispense_item(item, change):
+    item["stock"] -= 1
+    print(f"\nDispensing {item['name']}...")
+    print(f"Your change: {change:.2f} dhs.")
+    print(f"Enjoy your {item['name']}!\n")
+
+
+# Main function
+def vending_machine(items):
+    display_vending_machine_title()
+    while True:
+        display_menu(items)
+        code = get_item_code(items)
+        item = items[code]
+        
+        if item["stock"] > 0:
+            change = process_payment(item)
+            dispense_item(item, change)
+        else:
+            print(f"\nSorry, {item['name']} is out of stock.\n")
+        
+        another = input("Do you want to buy another item? (yes/no): ").strip().lower()
+        if another != "yes":
+            print("\nThank you for using Snackstation Vending Machine. Goodbye!")
+            break
+
 
 # Vending Machine Items
 items = {
@@ -22,16 +90,6 @@ items = {
     "2D": {"name": "Muffins", "price": 2.25, "stock": 5},
 }
 
-# Displaying the menu in a readable format
-def display_menu(items):
-    print("\nAvailable Items:")
-    for code, item in items.items():
-        print(f"{code}: {item['name']} - {item['price']:.2f} dhs (Stock: {item['stock']})")
 
-# Making it User interactive for the uswer to select the item of choice 
-def get_item_code(items):
-    while True:
-        code = input("\nEnter the code of the item you want to purchase (e.g., 1A): ").upper()
-        if code in items:
-            return code
-        print("Invalid code. Please try again.")
+# Start the vending machine process
+vending_machine(items)
