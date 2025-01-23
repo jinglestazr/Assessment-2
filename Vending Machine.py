@@ -58,6 +58,14 @@ def dispense_item(item, change):
     print(f"Enjoy your {item['name']}!\n")
 
 
+# Suggest an additional item
+def suggest_item(items, selected_code):
+    for code, item in items.items():
+        if code != selected_code and item["stock"] > 0:
+            return code, item
+    return None, None
+
+
 # Main function
 def vending_machine(items):
     display_vending_machine_title()
@@ -65,13 +73,29 @@ def vending_machine(items):
         display_menu(items)
         code = get_item_code(items)
         item = items[code]
-        
+
         if item["stock"] > 0:
             change = process_payment(item)
+
+            # Suggest an additional item before dispensing the main item
+            suggested_code, suggested_item = suggest_item(items, code)
+            if suggested_code:
+                suggestion = input(f"Would you like to add {suggested_item['name']} for {suggested_item['price']:.2f} dhs? (yes/no): ").strip().lower()
+                if suggestion == "yes":
+                    if suggested_item["stock"] > 0:
+                        try:
+                            change = process_payment(suggested_item)
+                            dispense_item(suggested_item, change)
+                        except ValueError:
+                            print("Invalid payment. Skipping suggested item.")
+                    else:
+                        print(f"Sorry, {suggested_item['name']} is out of stock.")
+
             dispense_item(item, change)
+
         else:
             print(f"\nSorry, {item['name']} is out of stock.\n")
-        
+
         another = input("Do you want to buy another item? (yes/no): ").strip().lower()
         if another != "yes":
             print("\nThank you for using Snackstation Vending Machine. Goodbye!")
@@ -93,3 +117,5 @@ items = {
 
 # Start the vending machine process
 vending_machine(items)
+
+
