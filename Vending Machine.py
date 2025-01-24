@@ -16,7 +16,7 @@ def display_vending_machine_title():
     print("╠" + "═" * 46 + "╣\n")
 
 
-# Display the menu in a visually appealing format
+# Displaying the menu in a table format for the user to identify it for visibly 
 def display_menu(items):
     print("\n╔" + "═" * 46 + "╗")
     print("║                 Available Items              ║")
@@ -28,7 +28,7 @@ def display_menu(items):
     print("╚" + "═" * 46 + "╝")
 
 
-# Get valid code from the user
+# Made a code for the user to input the item they want
 def get_item_code(items):
     while True:
         code = input("\nEnter the code of the item you want to purchase (e.g., 1A): ").upper()
@@ -37,7 +37,7 @@ def get_item_code(items):
         print("Invalid code. Please try again.")
 
 
-# Process payment
+# Code for the payment process 
 def process_payment(item):
     while True:
         try:
@@ -50,7 +50,7 @@ def process_payment(item):
             print("Invalid input. Please insert a valid amount.")
 
 
-# Dispense item
+# code for Dispensing item to the user
 def dispense_item(item, change):
     item["stock"] -= 1
     print(f"\nDispensing {item['name']}...")
@@ -58,7 +58,7 @@ def dispense_item(item, change):
     print(f"Enjoy your {item['name']}!\n")
 
 
-# Suggest an additional item
+# Suggesting an additional item for the user to purchase
 def suggest_item(items, selected_code):
     for code, item in items.items():
         if code != selected_code and item["stock"] > 0:
@@ -66,7 +66,7 @@ def suggest_item(items, selected_code):
     return None, None
 
 
-# Main function
+# Main function for the items in the vending machine 
 def vending_machine(items):
     display_vending_machine_title()
     while True:
@@ -77,7 +77,7 @@ def vending_machine(items):
         if item["stock"] > 0:
             change = process_payment(item)
 
-            # Suggest an additional item before dispensing the main item
+            # Suggesting an additional item before dispensing the main item
             suggested_code, suggested_item = suggest_item(items, code)
             if suggested_code:
                 suggestion = input(f"Would you like to add {suggested_item['name']} for {suggested_item['price']:.2f} dhs? (yes/no): ").strip().lower()
