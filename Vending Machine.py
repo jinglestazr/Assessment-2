@@ -1,5 +1,4 @@
-# Displaying a Intro Screen for the Vending Machine 
-
+# Displaying a Title Screen for the Vending Machine
 def display_vending_machine_title():
     print(r"""
 ███████╗███╗   ██╗ █████╗  ██████╗██╗  ██╗    ███╗   ███╗ █████╗  ██████╗██╗  ██╗██╗███╗   ██╗███████╗
@@ -21,7 +20,7 @@ def display_menu(items):
     print("\n╔" + "═" * 46 + "╗")
     print("║                 Available Items              ║")
     print("╠" + "═" * 46 + "╣")
-    print("║ Code │       Item Name       │ Price │ Stock ║")
+    print("║ Code │       Item Name     │ Price │ Stock   ║")
     print("╠" + "═" * 46 + "╣")
     for code, item in items.items():
         print(f"║ {code:<4} │ {item['name']:<19} │ {item['price']:<5.2f} │ {item['stock']:<6}  ║")
@@ -39,22 +38,25 @@ def get_item_code(items):
 
 # Code for the payment process 
 def process_payment(item):
-    while True:
+    total_paid = 0
+    while total_paid < item["price"]:
         try:
-            amount = float(input(f"Insert money (Price: {item['price']:.2f} dhs): "))
-            if amount >= item["price"]:
-                return amount - item["price"]
+            amount = float(input(f"Insert money (Remaining: {item['price'] - total_paid:.2f} dhs): "))
+            if amount > 0:
+                total_paid += amount
             else:
-                print(f"Not enough money. Please add {item['price'] - amount:.2f} dhs more.")
+                print("Please insert a valid positive amount.")
         except ValueError:
             print("Invalid input. Please insert a valid amount.")
+    return total_paid - item["price"]
 
 
-# code for Dispensing item to the user
+# Code for Dispensing item to the user
 def dispense_item(item, change):
     item["stock"] -= 1
     print(f"\nDispensing {item['name']}...")
-    print(f"Your change: {change:.2f} dhs.")
+    if change > 0:
+        print(f"Your change: {change:.2f} dhs.")
     print(f"Enjoy your {item['name']}!\n")
 
 
@@ -75,21 +77,17 @@ def vending_machine(items):
         item = items[code]
 
         if item["stock"] > 0:
+            print(f"You selected {item['name']} for {item['price']:.2f} dhs.")
             change = process_payment(item)
 
             # Suggesting an additional item before dispensing the main item
             suggested_code, suggested_item = suggest_item(items, code)
             if suggested_code:
                 suggestion = input(f"Would you like to add {suggested_item['name']} for {suggested_item['price']:.2f} dhs? (yes/no): ").strip().lower()
-                if suggestion == "yes":
-                    if suggested_item["stock"] > 0:
-                        try:
-                            change = process_payment(suggested_item)
-                            dispense_item(suggested_item, change)
-                        except ValueError:
-                            print("Invalid payment. Skipping suggested item.")
-                    else:
-                        print(f"Sorry, {suggested_item['name']} is out of stock.")
+                if suggestion == "yes" and suggested_item["stock"] > 0:
+                    print(f"You selected {suggested_item['name']}.")
+                    additional_change = process_payment(suggested_item)
+                    dispense_item(suggested_item, additional_change)
 
             dispense_item(item, change)
 
